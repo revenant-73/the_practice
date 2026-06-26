@@ -290,9 +290,11 @@ const PracticeScreen = ({ track, onComplete }) => {
         </span>
         <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
           track === 'Green' ? 'bg-green-100 text-green-700' :
-          track === 'Yellow' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+          track === 'Yellow' ? 'bg-yellow-100 text-yellow-700' : 
+          track === 'Red' ? 'bg-red-100 text-red-700' :
+          'bg-blue-100 text-blue-700'
         }`}>
-          {track} Track Mode
+          {track} Mode
         </div>
       </div>
 
@@ -343,8 +345,8 @@ const PracticeScreen = ({ track, onComplete }) => {
                 </div>
 
                 <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Adapt ({track} Track)</p>
-                  <p className="text-sm text-slate-800 font-bold">{m.adapt[track]}</p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Adapt ({track})</p>
+                  <p className="text-sm text-slate-800 font-bold">{m.adapt[track] || m.adapt.Green}</p>
                 </div>
               </div>
             </div>

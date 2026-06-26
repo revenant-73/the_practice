@@ -39,12 +39,11 @@ function App() {
   };
 
   const handleStartMorningPractice = () => {
-    // Starts directly without full check-in. Use default 'Green' or 'Yellow'.
-    // Here we'll default to 'Green' but allow practice to proceed.
+    // Starts directly without full check-in. Use 'Standard' track.
     const mockRecommendation = {
       score: '--',
-      track: 'Green',
-      message: 'Direct start: Focus on full restoration and athletic expression.',
+      track: 'Standard',
+      message: 'Standard Practice: Focus on restoring options and athletic exploration.',
       priorityAreas: []
     };
     setCurrentEntry({
