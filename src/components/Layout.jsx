@@ -3,7 +3,7 @@ import { Calendar, List, PlusCircle } from 'lucide-react';
 
 const Layout = ({ children, activeTab, setActiveTab }) => {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col pb-20">
+    <div className="min-h-screen bg-slate-50 flex flex-col pb-32">
       <header className="bg-white border-b border-slate-200 p-4 sticky top-0 z-10">
         <div className="max-w-md mx-auto flex justify-between items-center">
           <h1 className="text-xl font-bold text-slate-900">The Practice</h1>

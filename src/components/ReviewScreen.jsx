@@ -15,16 +15,28 @@ const ReviewScreen = ({ entries }) => {
     recentEntries.forEach(e => {
       const dateStr = new Date(e.date).toLocaleDateString();
       report += `## ${dateStr}\n`;
-      report += `- **Readiness Score:** ${e.recommendation.score}\n`;
-      report += `- **Track:** ${e.recommendation.track}\n`;
-      report += `- **Energy:** ${e.checkIn.physicalEnergy} (P), ${e.checkIn.mentalEnergy} (M)\n`;
-      report += `- **Pain/Stiffness:** ${e.checkIn.overallPain} / ${e.checkIn.overallStiffness}\n`;
-      if (e.recommendation.priorityAreas.length > 0) {
-        report += `- **Priority Areas:** ${e.recommendation.priorityAreas.join(', ')}\n`;
-      }
-      if (e.reflection) {
-        report += `- **Reflection:** ${e.reflection.whatChanged}\n`;
-        report += `- **Tomorrow Focus:** ${e.reflection.tomorrow}\n`;
+      
+      if (e.type === 'snack') {
+        report += `- **Type:** Movement Snack (${e.snackName})\n`;
+        report += `- **Duration:** ${e.duration}\n`;
+        report += `- **Track:** ${e.track}\n`;
+        report += `- **Result:** ${e.result.replace('_', ' ')}\n`;
+        if (e.note) report += `- **Note:** ${e.note}\n`;
+      } else {
+        report += `- **Type:** Morning Practice\n`;
+        report += `- **Readiness Score:** ${e.recommendation.score}\n`;
+        report += `- **Track:** ${e.recommendation.track}\n`;
+        if (e.checkIn) {
+          report += `- **Energy:** ${e.checkIn.physicalEnergy} (P), ${e.checkIn.mentalEnergy} (M)\n`;
+          report += `- **Pain/Stiffness:** ${e.checkIn.overallPain} / ${e.checkIn.overallStiffness}\n`;
+        }
+        if (e.recommendation.priorityAreas && e.recommendation.priorityAreas.length > 0) {
+          report += `- **Priority Areas:** ${e.recommendation.priorityAreas.join(', ')}\n`;
+        }
+        if (e.reflection) {
+          report += `- **Reflection:** ${e.reflection.whatChanged}\n`;
+          report += `- **Tomorrow Focus:** ${e.reflection.tomorrow}\n`;
+        }
       }
       report += "\n";
     });
@@ -37,7 +49,7 @@ const ReviewScreen = ({ entries }) => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-12">
       <div className="flex justify-between items-end">
         <div className="space-y-1">
           <h2 className="text-3xl font-black text-slate-900">Review</h2>
@@ -68,18 +80,35 @@ const ReviewScreen = ({ entries }) => {
                   <div className="text-xs font-black text-slate-400 uppercase tracking-widest">
                     {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' })}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded-full ${
-                      entry.recommendation.track === 'Green' ? 'bg-green-500' : 
-                      entry.recommendation.track === 'Yellow' ? 'bg-yellow-500' : 'bg-red-500'
-                    }`} />
-                    <span className="font-bold text-slate-800">{entry.recommendation.track} Track</span>
-                    <span className="text-slate-400 text-sm font-medium">• Score: {entry.recommendation.score}</span>
-                  </div>
-                  {entry.reflection && (
-                    <p className="text-sm text-slate-600 italic line-clamp-1 mt-1 pr-4">
-                      "{entry.reflection.whatChanged || entry.reflection.tomorrow}"
+                  
+                  {entry.type === 'snack' ? (
+                    <div className="flex items-center gap-2">
+                      <div className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-black uppercase rounded-md border border-blue-100">
+                        Snack
+                      </div>
+                      <span className="font-bold text-slate-800">{entry.snackName}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${
+                        entry.recommendation.track === 'Green' ? 'bg-green-500' : 
+                        entry.recommendation.track === 'Yellow' ? 'bg-yellow-500' : 'bg-red-500'
+                      }`} />
+                      <span className="font-bold text-slate-800">{entry.recommendation.track} Track</span>
+                      <span className="text-slate-400 text-sm font-medium">• Score: {entry.recommendation.score}</span>
+                    </div>
+                  )}
+
+                  {entry.type === 'snack' ? (
+                    <p className="text-sm text-slate-600 italic line-clamp-1 mt-1 pr-4 capitalize">
+                      {entry.result?.replace('_', ' ')} {entry.note && `• ${entry.note}`}
                     </p>
+                  ) : (
+                    entry.reflection && (
+                      <p className="text-sm text-slate-600 italic line-clamp-1 mt-1 pr-4">
+                        "{entry.reflection.whatChanged || entry.reflection.tomorrow}"
+                      </p>
+                    )
                   )}
                 </div>
                 <ChevronRight size={20} className="text-slate-300 group-active:text-blue-500 transition-colors" />

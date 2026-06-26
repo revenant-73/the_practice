@@ -16,7 +16,7 @@ const ReflectionScreen = ({ onSave }) => {
   const isComplete = Object.values(reflection).some(v => v.length > 0);
 
   return (
-    <div className="space-y-8 animate-in slide-in-from-bottom duration-500">
+    <div className="space-y-8 animate-in slide-in-from-bottom duration-500 pb-12">
       <div className="space-y-2">
         <h2 className="text-3xl font-black text-slate-900">Reflect</h2>
         <p className="text-slate-500 font-medium">Turn today's practice into tomorrow's information.</p>

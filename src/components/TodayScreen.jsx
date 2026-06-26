@@ -11,7 +11,7 @@ const TodayScreen = ({ latestEntry, onStartMorningPractice, onStartCheckIn, onSt
   const hasTodayEntry = latestEntry && new Date(latestEntry.date).toDateString() === new Date().toDateString();
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-500 pb-4">
+    <div className="space-y-4 animate-in fade-in duration-500 pb-12">
       <section className="text-center space-y-1">
         <h1 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em]">The Practice</h1>
         <h2 className="text-xl font-black text-slate-900">{today}</h2>

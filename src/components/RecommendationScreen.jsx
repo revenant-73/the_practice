@@ -21,7 +21,7 @@ const RecommendationScreen = ({ recommendation, onStartPractice }) => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in zoom-in duration-500">
+    <div className="space-y-6 animate-in fade-in zoom-in duration-500 pb-12">
       <div className="text-center space-y-2">
         <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Daily Readiness</h2>
         <div className="text-6xl font-black text-slate-900">{recommendation.score}</div>

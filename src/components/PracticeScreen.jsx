@@ -354,9 +354,7 @@ const PracticeScreen = ({ track, onComplete }) => {
         </div>
       </div>
 
-      <div className="h-20"></div>
-
-      <div className="flex gap-4 sticky bottom-0 bg-slate-50 pt-4 pb-2 z-20">
+      <div className="flex gap-4 pt-8 pb-4">
         {currentStep > 0 && (
           <button 
             onClick={() => setCurrentStep(s => s - 1)}

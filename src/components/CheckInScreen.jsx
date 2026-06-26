@@ -186,7 +186,7 @@ const CheckInScreen = ({ onComplete, onCancel }) => {
   };
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-120px)]">
+    <div className="flex flex-col min-h-[calc(100vh-120px)] pb-12">
       <div className="flex-1">
         {renderStep()}
       </div>

@@ -88,6 +88,12 @@ function App() {
     setActiveTab('today');
   };
 
+  const handleSnackSave = (snackEntry) => {
+    setEntries(prev => [...prev, snackEntry]);
+    setCurrentScreen('main');
+    setActiveTab('today');
+  };
+
   const renderScreen = () => {
     if (activeTab === 'review') {
       return <ReviewScreen entries={entries} />;
@@ -112,7 +118,10 @@ function App() {
       case 'reflection':
         return <ReflectionScreen onSave={handleReflectionSave} />;
       case 'snacks':
-        return <MovementSnackScreen onBack={() => setCurrentScreen('main')} />;
+        return <MovementSnackScreen 
+          onBack={() => setCurrentScreen('main')} 
+          onSave={handleSnackSave}
+        />;
       case 'main':
       default:
         return <TodayScreen 
