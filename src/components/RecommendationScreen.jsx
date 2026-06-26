@@ -33,8 +33,8 @@ const RecommendationScreen = ({ recommendation, onStartPractice }) => {
           <span className="text-2xl font-black uppercase tracking-tight">{recommendation.track} Track</span>
           {recommendation.track === 'Red' && <AlertCircle size={24} />}
         </div>
-        <p className="font-bold leading-relaxed text-lg italic">
-          "{recommendation.message}"
+        <p className="font-bold leading-relaxed text-lg italic text-center">
+          {recommendation.message}
         </p>
       </div>
 
@@ -76,7 +76,7 @@ const RecommendationScreen = ({ recommendation, onStartPractice }) => {
               </li>
               <li className="flex gap-3">
                 <span className="text-yellow-500 font-bold">02</span>
-                <span>Emphasize priority areas: {recommendation.priorityAreas.join(', ')}</span>
+                <span>Emphasize priority areas: {recommendation.priorityAreas.length > 0 ? recommendation.priorityAreas.join(', ') : 'None identified'}</span>
               </li>
             </>
           ) : (

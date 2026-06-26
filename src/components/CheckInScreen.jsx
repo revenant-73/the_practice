@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertCircle, ChevronRight, ChevronLeft } from 'lucide-react';
+import { AlertCircle, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 
 const CheckInScreen = ({ onComplete, onCancel }) => {
   const [step, setStep] = useState(1);
@@ -155,18 +155,25 @@ const CheckInScreen = ({ onComplete, onCancel }) => {
                 <span>Safety Gate</span>
               </div>
               <p className="text-sm text-slate-600 mb-4">Are you experiencing any of these today?</p>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-1 gap-3">
                 {safetyOptions.map(option => (
                   <button
                     key={option}
                     onClick={() => toggleSafety(option)}
-                    className={`text-left p-3 rounded-xl border-2 transition-all ${
+                    className={`text-left p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
                       inputs.safetyGate.includes(option)
-                        ? 'border-red-500 bg-red-50 text-red-700'
+                        ? 'border-red-500 bg-red-50 text-red-700 shadow-sm'
                         : 'border-slate-100 bg-white text-slate-600'
                     }`}
                   >
-                    {option}
+                    <span className="font-medium">{option}</span>
+                    <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
+                      inputs.safetyGate.includes(option)
+                        ? 'bg-red-500 border-red-500'
+                        : 'border-slate-200'
+                    }`}>
+                      {inputs.safetyGate.includes(option) && <Check size={16} className="text-white" />}
+                    </div>
                   </button>
                 ))}
               </div>

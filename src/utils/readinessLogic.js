@@ -27,7 +27,17 @@ export const calculateReadiness = (inputs) => {
   score = Math.max(0, Math.min(100, Math.round(score)));
 
   // 7.1 Red Track Override
+  const hardRedFlags = [
+    'Chest pain / shortness of breath',
+    'Dizziness',
+    'New numbness / tingling',
+    'Pain that feels unsafe'
+  ];
+
+  const hasHardRedFlag = safetyGate.some(flag => hardRedFlags.includes(flag));
+
   const isRedTriggered = 
+    hasHardRedFlag ||
     safetyGate.length > 0 ||
     physicalEnergy <= 3 ||
     overallPain >= 7 ||
@@ -42,7 +52,9 @@ export const calculateReadiness = (inputs) => {
     return {
       score,
       track: 'Red',
-      message: 'Today is a restore day. This is not a failure. The goal is to lower threat, restore options, and keep the practice alive.',
+      message: hasHardRedFlag 
+        ? 'Red Track. Do not push through this. Use gentle movement only if it feels safe, and consider getting medical guidance.'
+        : 'Today is a restore day. This is not a failure. The goal is to lower threat, restore options, and keep the practice alive.',
       priorityAreas: getPriorityAreas(painMap, stiffnessMap)
     };
   }
