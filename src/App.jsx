@@ -6,11 +6,12 @@ import RecommendationScreen from './components/RecommendationScreen';
 import PracticeScreen from './components/PracticeScreen';
 import ReflectionScreen from './components/ReflectionScreen';
 import ReviewScreen from './components/ReviewScreen';
+import MovementSnackScreen from './components/MovementSnackScreen';
 import { calculateReadiness } from './utils/readinessLogic';
 
 function App() {
   const [activeTab, setActiveTab] = useState('today');
-  const [currentScreen, setCurrentScreen] = useState('main'); // main, checkin, recommendation, practice, reflection
+  const [currentScreen, setCurrentScreen] = useState('main'); // main, checkin, recommendation, practice, reflection, snacks
   const [entries, setEntries] = useState([]);
   const [currentEntry, setCurrentEntry] = useState(null);
 
@@ -37,6 +38,29 @@ function App() {
     setCurrentScreen('checkin');
   };
 
+  const handleStartMorningPractice = () => {
+    // Starts directly without full check-in. Use default 'Green' or 'Yellow'.
+    // Here we'll default to 'Green' but allow practice to proceed.
+    const mockRecommendation = {
+      score: '--',
+      track: 'Green',
+      message: 'Direct start: Focus on full restoration and athletic expression.',
+      priorityAreas: []
+    };
+    setCurrentEntry({
+      date: new Date().toISOString(),
+      checkIn: null,
+      recommendation: mockRecommendation,
+      reflection: null,
+      isDirectPractice: true
+    });
+    setCurrentScreen('practice');
+  };
+
+  const handleStartSnacks = () => {
+    setCurrentScreen('snacks');
+  };
+
   const handleCheckInComplete = (inputs) => {
     const recommendation = calculateReadiness(inputs);
     const entry = {
@@ -59,11 +83,7 @@ function App() {
 
   const handleReflectionSave = (reflection) => {
     const finalEntry = { ...currentEntry, reflection };
-    
-    // If an entry for today already exists, we might want to update it or add a new one.
-    // For MVP, we'll just add it to the list.
     setEntries(prev => [...prev, finalEntry]);
-    
     setCurrentEntry(null);
     setCurrentScreen('main');
     setActiveTab('today');
@@ -87,14 +107,21 @@ function App() {
         />;
       case 'practice':
         return <PracticeScreen 
-          track={currentEntry.recommendation.track} 
+          track={currentEntry?.recommendation?.track || 'Green'} 
           onComplete={handlePracticeComplete} 
         />;
       case 'reflection':
         return <ReflectionScreen onSave={handleReflectionSave} />;
+      case 'snacks':
+        return <MovementSnackScreen onBack={() => setCurrentScreen('main')} />;
       case 'main':
       default:
-        return <TodayScreen latestEntry={latestEntry} onStartCheckIn={handleStartCheckIn} />;
+        return <TodayScreen 
+          latestEntry={latestEntry} 
+          onStartMorningPractice={handleStartMorningPractice}
+          onStartCheckIn={handleStartCheckIn}
+          onStartSnacks={handleStartSnacks}
+        />;
     }
   };
 
