@@ -99,10 +99,22 @@ const ReviewScreen = ({ entries }) => {
       });
     });
 
-    const avg = (arr) => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1) : '--';
+    const avg = (arr) => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1) : 'Not available';
     
     // Find most common track
-    const mostCommonTrack = Object.entries(stats.tracks).reduce((a, b) => b[1] > a[1] ? b : a)[0];
+    const trackCounts = Object.entries(stats.tracks).filter(t => t[1] > 0);
+    let mostCommonTrack = 'Not available';
+    
+    if (trackCounts.length > 0) {
+      const maxCount = Math.max(...trackCounts.map(t => t[1]));
+      const topTracks = trackCounts.filter(t => t[1] === maxCount).map(t => t[0]);
+      
+      if (topTracks.length > 1) {
+        mostCommonTrack = `Tie — ${topTracks.join(' / ')}`;
+      } else {
+        mostCommonTrack = topTracks[0];
+      }
+    }
 
     // Build Report
     let report = `# The Practice Weekly Report\n`;
@@ -144,8 +156,8 @@ const ReviewScreen = ({ entries }) => {
     weekEntries.filter(e => e.type !== 'snack').forEach(e => {
       report += `### ${new Date(e.date).toLocaleDateString()}\n`;
       report += `- **Type:** ${e.isDirectPractice ? 'Morning' : 'Full'}\n`;
-      report += `- **Track:** ${e.recommendation?.track || '--'}\n`;
-      report += `- **Readiness Score:** ${e.recommendation?.score || '--'}\n`;
+      report += `- **Track:** ${e.recommendation?.track || 'Not available'}\n`;
+      report += `- **Readiness Score:** ${e.recommendation?.score || 'Not available'}\n`;
       if (e.recommendation?.priorityAreas?.length > 0) {
         report += `- **Priority Areas:** ${e.recommendation.priorityAreas.join(', ')}\n`;
       }
@@ -157,22 +169,39 @@ const ReviewScreen = ({ entries }) => {
     });
 
     report += `## Movement Snack Entries\n`;
-    weekEntries.filter(e => e.type === 'snack').forEach(e => {
-      report += `### ${new Date(e.date).toLocaleDateString()}\n`;
-      report += `- **Snack:** ${e.snackName}\n`;
-      report += `- **Adaptation Used:** ${e.track || '--'}\n`;
-      report += `- **Result:** ${e.result?.replace('_', ' ') || '--'}\n`;
-      if (e.note) report += `- **Note:** ${e.note}\n`;
-      report += `\n`;
-    });
+    const snackEntries = weekEntries.filter(e => e.type === 'snack');
+    if (snackEntries.length === 0) {
+      report += `None recorded this week.\n\n`;
+    } else {
+      snackEntries.forEach(e => {
+        report += `### ${new Date(e.date).toLocaleDateString()}\n`;
+        report += `- **Snack:** ${e.snackName}\n`;
+        report += `- **Adaptation Used:** ${e.track || 'Not available'}\n`;
+        report += `- **Result:** ${e.result?.replace('_', ' ') || 'Not available'}\n`;
+        if (e.note) report += `- **Note:** ${e.note}\n`;
+        report += `\n`;
+      });
+    }
 
     // Pattern Summary
     report += `## Pattern Summary\n`;
     if (sortedAreas.length > 0) {
+      const getLanguage = (count) => {
+        if (count >= 3) return "appeared repeatedly";
+        if (count === 2) return "appeared more than once";
+        return "appeared once";
+      };
+
       const topArea = sortedAreas[0][0];
-      const secondArea = sortedAreas.length > 1 ? sortedAreas[1][0] : null;
-      report += `${topArea} patterns appeared repeatedly this week. `;
-      if (secondArea) report += `${secondArea} also appeared more than once. `;
+      const topCount = sortedAreas[0][1];
+      report += `${topArea} ${getLanguage(topCount)} this week. `;
+      
+      if (sortedAreas.length > 1) {
+        const secondArea = sortedAreas[1][0];
+        const secondCount = sortedAreas[1][1];
+        report += `${secondArea} also ${getLanguage(secondCount)}. `;
+      }
+      
       report += `Consider prioritizing specific snacks for these areas next week.\n\n`;
     } else {
       report += `No significant patterns detected. Keep exploring a variety of movements.\n\n`;
